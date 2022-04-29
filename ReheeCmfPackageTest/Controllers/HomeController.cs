@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ReheeCmfPackageTest.Models;
+using Requests;
 using System.Diagnostics;
 
 namespace ReheeCmfPackageTest.Controllers
@@ -17,6 +19,13 @@ namespace ReheeCmfPackageTest.Controllers
     {
       return View();
     }
+    public async Task<IActionResult> TTT()
+    {
+      var c = new Requesta();
+      await c.TryAdding();
+      return View();
+    }
+
 
     public IActionResult Privacy()
     {
@@ -27,6 +36,28 @@ namespace ReheeCmfPackageTest.Controllers
     public IActionResult Error()
     {
       return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+  }
+
+  public class Requesta : RequestBase
+  {
+    public async Task TryAdding()
+    {
+      await Task.CompletedTask;
+      //for (var i = 0; i < int.MaxValue; i++)
+      //{
+      //  var dic = new Dictionary<string, string>();
+      //  var json = JsonConvert.SerializeObject(dic);
+      //  var start = DateTime.Now;
+      //  await Request(GetHttpClient(), HttpMethod.Post, "https://reheecmf.azurewebsites.net/Api/Data/EntityInput/-1", json);
+      //  var end = DateTime.Now;
+
+      //  Console.WriteLine($"line {i} processed {(end - start).TotalMilliseconds} total ms");
+      //}
+    }
+    protected override HttpClient GetHttpClient(string name = null)
+    {
+      return new HttpClient();
     }
   }
 }
