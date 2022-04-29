@@ -1,6 +1,8 @@
 ﻿using Authenticates;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.OData;
+using Microsoft.OpenApi.Models;
+using OData.Swagger.Services;
 using ODataControllers;
 using ReheeCmf.API;
 using ReheeCmfPackageTest.Data;
@@ -31,6 +33,43 @@ namespace ReheeCmfPackageTest
       //services.AddSingleton<ICryptService, CryptService>(sp =>
       //  new CryptService(() => sp.GetService<IHttpClientFactory>().CreateClient("EncrytEndpoints"))
       //);
+      services
+        .AddSwaggerGen(c =>
+        {
+          c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()
+          {
+            Title = "Cmf Api",
+            Version = "v1",
+          });
+          c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+          {
+            Description = @"JWT Authorization header using the Bearer scheme. <br>
+                      Enter 'Bearer' [space] and then your token in the text input below. <br>
+                      Example: 'Bearer 12345abcdef'",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+          });
+          c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+          {
+            {
+            new OpenApiSecurityScheme
+            {
+              Reference = new OpenApiReference
+                {
+                  Type = ReferenceType.SecurityScheme,
+                  Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+              },
+              new List<string>()
+            }
+          });
+        });
+      services.AddOdataSwaggerSupport();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,7 +127,8 @@ namespace ReheeCmfPackageTest
       app.UseRouting();
       app.UseAuthentication();
       app.UseAuthorization();
-
+      app.UseSwagger();
+      app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "cmf api v1"));
 
       app.UseEndpoints(endpoints =>
       {

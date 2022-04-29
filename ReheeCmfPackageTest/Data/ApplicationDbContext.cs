@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReheeCmf.DBContext;
+using ReheeCmfPackageTest.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,10 @@ namespace ReheeCmfPackageTest.Data
         : base(options)
     {
     }
+    [PublicEntity]
+    public DbSet<Entity1> Entity1s { get; set; }
+    [PublicEntity]
+    public DbSet<EntityInput> EntityInputs { get; set; }
   }
   public class MyUser : IdentityUser, ICmfUser
   {
