@@ -28,10 +28,9 @@ jobs:
       run: dotnet publish ReheeCmfPackageTest/ReheeCmfPackageTest.csproj -c Release -o release --nologo
     - name: Build Container image
       run: docker build . --file Dockerfile --tag reheecmfpackagetest
-    - name: Push image to Github Container Registry
+    - name: Push image to docker hub
       run: |
-        $IMAGE_ID=ghcr.io/${{ github.repository_owner}}/reheecmfpackagetest:${{github.run_id}}
-        docker push $IMAGE_ID
+        docker pull rehee1313/reheecmf_package_test
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
