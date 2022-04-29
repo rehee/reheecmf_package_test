@@ -12,8 +12,8 @@ using ReheeCmfPackageTest.Data;
 namespace ReheeCmfPackageTest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220429121023_init")]
-    partial class init
+    [Migration("20220429194500_init-db")]
+    partial class initdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
