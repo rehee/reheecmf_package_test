@@ -21,10 +21,10 @@ jobs:
     - name: Publish .Net Core Project
       run: dotnet publish ReheeCmfPackageTest/ReheeCmfPackageTest.csproj -c Release -o release --nologo
     - name: Build Container image
-      run: docker build . --file Dockerfile --tag reheecmf_package_test
+      run: docker build . --file Dockerfile --tag reheecmfpackagetest
     - name: Push image to Github Container Registry
       run: |
-        $IMAGE_ID=ghcr.io/${{ github.repository_owner}}/reheecmf_package_test:${{github.run_id}}
+        $IMAGE_ID=ghcr.io/${{ github.repository_owner}}/reheecmfpackagetest:${{github.run_id}}
         docker push $IMAGE_ID
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@4.1.7
