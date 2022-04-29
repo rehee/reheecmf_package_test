@@ -24,7 +24,7 @@ jobs:
       run: cd release
       
     - name: Build Container image
-      run: docker build . --file Dockerfile --tag IMAGE_NAME
+      run: docker build . --file Dockerfile --tag reheecmf_package_test
       
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@4.1.7
