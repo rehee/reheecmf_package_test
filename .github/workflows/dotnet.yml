@@ -19,7 +19,7 @@ jobs:
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.PACKAGE_TOKEN }}
+        password: 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
     
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
