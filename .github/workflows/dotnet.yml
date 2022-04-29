@@ -35,9 +35,3 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/reheecmf_package_test:latest
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@4.1.7
-      with:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        BRANCH: display
-        FOLDER: release
