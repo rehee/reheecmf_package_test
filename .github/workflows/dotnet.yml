@@ -30,7 +30,7 @@ jobs:
       run: docker build . --file Dockerfile --tag reheecmfpackagetest
     - name: Push image to docker hub
       run: |
-        docker pull rehee1313/reheecmf_package_test:${{github.run_id}}
+        docker pull ${{ secrets.DOCKER_USERNAME }}/reheecmf_package_test:latest
     - name: Commit wwwroot to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@4.1.7
       with:
