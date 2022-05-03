@@ -1,5 +1,6 @@
 ﻿using Authenticates;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using ReheeCmfPackageTest.Models;
 using Requests;
@@ -10,13 +11,13 @@ namespace ReheeCmfPackageTest.Controllers
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;
-    private readonly IConfiguration configuration;
+    private readonly UserManagementOption option;
 
 
-    public HomeController(ILogger<HomeController> logger, IConfiguration Configuration)
+    public HomeController(ILogger<HomeController> logger, IOptions<UserManagementOption> options)
     {
       _logger = logger;
-      configuration = Configuration;
+      option = options.Value ?? UserManagementOption.Detault;
     }
 
     public IActionResult Index()
@@ -32,7 +33,7 @@ namespace ReheeCmfPackageTest.Controllers
 
     public IActionResult Options()
     {
-      return StatusCode(200, configuration.GetOption<UserManagementOption>());
+      return StatusCode(200, option);
     }
 
     public IActionResult Privacy()
