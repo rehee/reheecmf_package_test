@@ -18,6 +18,12 @@ namespace ReheeCmfPackageTest.Controllers
     {
       _logger = logger;
       option = options.Value ?? UserManagementOption.Detault;
+      
+    }
+
+    private void SetString<T>(string v) where T : Bclass 
+    {
+      
     }
 
     public IActionResult Index()
