@@ -21,11 +21,6 @@ namespace ReheeCmfPackageTest.Controllers
       
     }
 
-    private void SetString<T>(string v) where T : Bclass 
-    {
-      
-    }
-
     public IActionResult Index()
     {
       return View();
