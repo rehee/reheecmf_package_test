@@ -1,4 +1,5 @@
 ﻿using Authenticates;
+using Cruds;
 using Entities;
 using FormInputs;
 using Grids;
@@ -16,7 +17,7 @@ namespace ReheeCmfPackageTest.Entities
   {
     public Entity1()
     {
-      
+
     }
 
 
@@ -37,7 +38,7 @@ namespace ReheeCmfPackageTest.Entities
       }
     }
 
-    
+
     [NotMapped]
     [IgnoreUpdate]
     [FormInputs(InputType = EnumInputType.Ignore)]
@@ -84,7 +85,7 @@ namespace ReheeCmfPackageTest.Entities
 
       }
     }
-  
+
     [NotMapped]
     public string A1 { get; set; }
     [NotMapped]
@@ -97,14 +98,9 @@ namespace ReheeCmfPackageTest.Entities
       return base.Validate(validationContext);
     }
 
-    public override void AfterCreate(TokenDTO user)
+    public override void AfterCreate(IContext context, TokenDTO user)
     {
-      Console.WriteLine(JsonConvert.SerializeObject(this));
-
-    }
-    public override void AfterUpdate(TokenDTO user, EntityChanges[] entityChanges)
-    {
-      Console.WriteLine(JsonConvert.SerializeObject(entityChanges));
+      Console.WriteLine("this item has been created");
     }
   }
 }

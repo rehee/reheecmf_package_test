@@ -1,8 +1,13 @@
 ﻿using Authenticates;
 using Cruds;
+using JWT;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ReheeCmf.Base.Entities;
+using ReheeCmf.DBContext;
+using ReheeCmf.Server.Controllers;
+using ReheeCmfPackageTest.Data;
 using ReheeCmfPackageTest.Entities;
 using ReheeCmfPackageTest.Models;
 using Requests;
@@ -10,23 +15,24 @@ using System.Diagnostics;
 
 namespace ReheeCmfPackageTest.Controllers
 {
-  public class HomeController : Controller
+  public class HomeController : ReheeCmfController
   {
     private readonly ILogger<HomeController> _logger;
     private readonly IContext db;
+    private readonly ApplicationDbContext db2;
     private readonly UserManagementOption option;
 
 
-    public HomeController(ILogger<HomeController> logger, IOptions<UserManagementOption> options, IContext db)
+    public HomeController(ILogger<HomeController> logger, IOptions<UserManagementOption> options, IContext db, IJWTService jwt, ApplicationDbContext db2) : base(db, jwt)
     {
       _logger = logger;
       this.db = db;
-      option = options.Value ?? UserManagementOption.Detault;
-
     }
-
     public IActionResult Index()
     {
+
+
+
       return View();
     }
     public async Task<IActionResult> TTT()
@@ -72,7 +78,7 @@ namespace ReheeCmfPackageTest.Controllers
         var dic = new Dictionary<string, string>();
         var json = JsonConvert.SerializeObject(dic);
         var start = DateTime.Now;
-        db.Create<EntityInput>(new EntityInput { CheckBox = "True" });
+        db.Create<EntityInput>(new EntityInput() { });
         //await Request(GetHttpClient(), HttpMethod.Post, "https://reheecmf.azurewebsites.net/Api/Data/EntityInput/-1", json);
         var end = DateTime.Now;
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;

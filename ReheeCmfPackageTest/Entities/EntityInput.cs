@@ -1,4 +1,6 @@
-﻿using Entities;
+﻿using Authenticates;
+using Cruds;
+using Entities;
 using FormInputs;
 using Grids;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -116,6 +118,11 @@ namespace ReheeCmfPackageTest.Entities
 
     [FormInputs(InputType = EnumInputType.Ignore)]
     public string CheckBox { get; set; }
+
+    public override void AfterCreate(IContext context, TokenDTO user)
+    {
+      
+    }
   }
 
   public enum EnumType1
