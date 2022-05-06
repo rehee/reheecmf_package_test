@@ -14,6 +14,10 @@ namespace ReheeCmfPackageTest.Controllers
     }
     public IActionResult Index()
     {
+      foreach (var t in ReflectPool.EntityMapping.Select(b => b.Key))
+      {
+        t.GetType().ThisType().GetMap();
+      }
       var result = factory.HealthCheckFunc();
       return Ok(result.Content);
     }
