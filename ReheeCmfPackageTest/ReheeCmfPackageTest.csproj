@@ -12,7 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.3" />
-    <PackageReference Include="ReheeCmf.API" Version="0.0.2-d" />
+    <PackageReference Include="ReheeCmf.API" Version="0.0.2-e" />
 		<PackageReference Include="OData.Swagger" Version="1.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.3.0" />
