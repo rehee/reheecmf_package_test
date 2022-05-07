@@ -21,7 +21,7 @@ namespace ReheeCmfPackageTest.Data
     [PublicEntity]
     public DbSet<EntityInput> EntityInputs { get; set; }
   }
-  public class MyUser : IdentityUser, ICmfUser
+  public class MyUser : ReheeCmfBaseUser
   {
 
     public string ThisRoles
@@ -43,8 +43,7 @@ namespace ReheeCmfPackageTest.Data
     }
 
     private string thisRole { get; set; }
-    [FormInputs(InputType = EnumInputType.File)]
-    public string Avatar { get; set; }
+    
     [NotMapped]
     [FormInputs(InputType = EnumInputType.Text)]
     [Display(Name = "Test label")]
