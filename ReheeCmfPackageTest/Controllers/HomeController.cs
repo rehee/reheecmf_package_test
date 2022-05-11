@@ -93,7 +93,7 @@ namespace ReheeCmfPackageTest.Controllers
         //var r = await Request(GetHttpClient(), HttpMethod.Get,
         //  "https://localhost:7183/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true");
         var end = DateTime.Now;
-        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is");
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
       }
       return result.ToArray();
