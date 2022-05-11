@@ -40,11 +40,14 @@ namespace ReheeCmfPackageTest.Controllers
       var c = new Requesta();
       var result = await c.TryAdding(db);
       var total = result.Sum(b => b.timeMs);
+      var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
       return Ok(new
       {
         total = total,
         avg = total / result.Length,
-        result = result
+        result = result,
+        max = first.timeMs,
+        maxLine = first.line,
       });
     }
     public async Task<IActionResult> TTT2()
@@ -52,10 +55,13 @@ namespace ReheeCmfPackageTest.Controllers
       var c = new Requesta();
       var result = await c.TryQuery(db);
       var total = result.Sum(b => b.timeMs);
+      var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
       return Ok(new
       {
         total = total,
         avg = total / result.Length,
+        max = first.timeMs,
+        maxLine = first.line,
         result = result
       });
     }
