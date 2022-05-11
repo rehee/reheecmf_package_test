@@ -56,8 +56,8 @@ namespace ReheeCmfPackageTest.Controllers
     public async Task<IActionResult> TTT2()
     {
       var c = new Requesta(options.Value);
-      //var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
-      var url = "https://localhost:5001/Api/Data/Read/EntityInput?$top=1&$count=true";
+      var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
+      //var url = "https://localhost:5001/Api/Data/Read/EntityInput?$top=1&$count=true";
       var result = await c.TryQuery(db, url);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
