@@ -56,8 +56,8 @@ namespace ReheeCmfPackageTest.Controllers
     public async Task<IActionResult> TTT2()
     {
       var c = new Requesta(options.Value);
-      var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
-      //var url = "https://localhost:5001/Api/Data/Read/EntityInput?$top=1&$count=true";
+      //var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
+      var url = "https://localhost:5001/Api/Data/Read/EntityInput?$top=1&$count=true";
       var result = await c.TryQuery(db, url);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
@@ -131,7 +131,8 @@ namespace ReheeCmfPackageTest.Controllers
         var r = await Request(GetHttpClient(), HttpMethod.Get, url);
         var end = DateTime.Now;
         Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
-        result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
+        result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds });
+        Thread.Sleep(100);
       }
       return result.ToArray();
     }
