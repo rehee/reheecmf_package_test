@@ -10,6 +10,14 @@ namespace ReheeCmfPackageTest
     {
       var host = CreateHostBuilder(args).Build();
       PropertyInject.Provider = host.Services;
+      using (var scope = host.Services.CreateScope())
+      {
+        using (var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>())
+        {
+
+          db.Database.Migrate();
+        }
+      }
       host.Run();
     }
 
