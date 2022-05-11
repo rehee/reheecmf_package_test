@@ -47,15 +47,17 @@ namespace ReheeCmfPackageTest.Controllers
       {
         total = total,
         avg = total / result.Length,
-        result = result,
         max = first.timeMs,
         maxLine = first.line,
+        result = result.OrderByDescending(b => b.timeMs),
+
       });
     }
     public async Task<IActionResult> TTT2()
     {
       var c = new Requesta(options.Value);
-      var result = await c.TryQuery(db);
+      var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
+      var result = await c.TryQuery(db, url);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
       return Ok(new
@@ -64,7 +66,8 @@ namespace ReheeCmfPackageTest.Controllers
         avg = total / result.Length,
         max = first.timeMs,
         maxLine = first.line,
-        result = result
+        url = url,
+        result = result.OrderByDescending(b => b.timeMs)
       });
     }
     public IActionResult Options()
@@ -112,7 +115,7 @@ namespace ReheeCmfPackageTest.Controllers
       }
       return result.ToArray();
     }
-    public async Task<checkResult[]> TryQuery(IContext db)
+    public async Task<checkResult[]> TryQuery(IContext db, string url)
     {
       await Task.CompletedTask;
       var result = new List<checkResult>();
@@ -123,8 +126,7 @@ namespace ReheeCmfPackageTest.Controllers
         var json = JsonConvert.SerializeObject(dic);
         var start = DateTime.Now;
         //db.Create<EntityInput>(new EntityInput() { });
-        var r = await Request(GetHttpClient(), HttpMethod.Get,
-          $"{Option.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true");
+        var r = await Request(GetHttpClient(), HttpMethod.Get, url);
         var end = DateTime.Now;
         Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
