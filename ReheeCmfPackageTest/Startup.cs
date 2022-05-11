@@ -117,12 +117,12 @@ namespace ReheeCmfPackageTest
         }
       });
 
-      app.UseODataRouteDebug();
+      //app.UseODataRouteDebug();
 
-      app.UseODataQueryRequest();
+      //app.UseODataQueryRequest();
 
       // Add the OData Batch middleware to support OData $Batch
-      app.UseODataBatching();
+      //app.UseODataBatching();
 
       app.UseRouting();
       app.UseAuthentication();
