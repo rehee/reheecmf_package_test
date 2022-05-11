@@ -47,7 +47,18 @@ namespace ReheeCmfPackageTest.Controllers
         result = result
       });
     }
-
+    public async Task<IActionResult> TTT2()
+    {
+      var c = new Requesta();
+      var result = await c.TryQuery(db);
+      var total = result.Sum(b => b.timeMs);
+      return Ok(new
+      {
+        total = total,
+        avg = total / result.Length,
+        result = result
+      });
+    }
     public IActionResult Options()
     {
       return StatusCode(200, option);
@@ -79,8 +90,29 @@ namespace ReheeCmfPackageTest.Controllers
         var json = JsonConvert.SerializeObject(dic);
         var start = DateTime.Now;
         db.Create<EntityInput>(new EntityInput() { });
-        //await Request(GetHttpClient(), HttpMethod.Post, "https://reheecmf.azurewebsites.net/Api/Data/EntityInput/-1", json);
+        //var r = await Request(GetHttpClient(), HttpMethod.Get,
+        //  "https://localhost:7183/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true");
         var end = DateTime.Now;
+        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+        result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
+      }
+      return result.ToArray();
+    }
+    public async Task<checkResult[]> TryQuery(IContext db)
+    {
+      await Task.CompletedTask;
+      var result = new List<checkResult>();
+      //var dbset = db.Create<>
+      for (var i = 0; i < 100; i++)
+      {
+        var dic = new Dictionary<string, string>();
+        var json = JsonConvert.SerializeObject(dic);
+        var start = DateTime.Now;
+        //db.Create<EntityInput>(new EntityInput() { });
+        var r = await Request(GetHttpClient(), HttpMethod.Get,
+          "https://reheecmf.azurewebsites.net/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true");
+        var end = DateTime.Now;
+        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
       }
       return result.ToArray();
