@@ -77,11 +77,11 @@ namespace ReheeCmfPackageTest.Controllers
         result = result.OrderByDescending(b => b.timeMs)
       });
     }
-    public async Task<IActionResult> TTT3(string id)
+    public async Task<IActionResult> TTT3(string id, bool showSummary = false)
     {
       var c = new Requesta(options.Value);
       var url = id;
-      var result = await c.TryQuery(db, url);
+      var result = await c.TryQuery(db, url, showSummary);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
       return Ok(new
@@ -145,7 +145,7 @@ namespace ReheeCmfPackageTest.Controllers
       await Task.CompletedTask;
       var result = new List<checkResult>();
       //var dbset = db.Create<>
-      
+      int moreThen500 = 0;
       for (var i = 0; i < 100; i++)
       {
         var dic = new Dictionary<string, string>();
@@ -160,26 +160,36 @@ namespace ReheeCmfPackageTest.Controllers
         //Thread.Sleep(100);
         if (!isSumamry)
         {
+#if DEBUG
           Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+#endif
+
         }
         else
         {
-          int moreThen500 = 0;
-          var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
-          Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
-          var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
-          if (over500.Length > 0)
+          try
           {
-            Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
-            moreThen500 = moreThen500 + over500.Length;
+            var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
+            Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
+            var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
+            if (over500.Length > 0)
+            {
+              Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
+              moreThen500 = moreThen500 + over500.Length;
+            }
           }
-          Console.WriteLine($"totel {moreThen500} lines more tham 500ms");
+          catch (Exception ex)
+          {
+            Console.WriteLine($"line {i} error {ex.Message}");
+          }
+
+
 
         }
 
 
       }
-      
+      Console.WriteLine($"totel {moreThen500} lines more tham 500ms");
       return result.ToArray();
     }
     protected override HttpClient GetHttpClient(string name = null)
