@@ -61,8 +61,26 @@ namespace ReheeCmfPackageTest.Controllers
       //var url = "https://reheeaddon.herokuapp.com/home/ttt2";
       //var url = "https://reheecmfwin.azurewebsites.net/home/ttt2";
       //var url = "https://reheecmfwin.azurewebsites.net/api/data/read/healthcheck";
+      //var url = "https://reheecmfcode.azurewebsites.net/home/ttt2";
+      //var url = "https://reheecmf.azurewebsites.net/home/ttt2";
 
-
+      var result = await c.TryQuery(db, url);
+      var total = result.Sum(b => b.timeMs);
+      var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
+      return Ok(new
+      {
+        total = total,
+        avg = total / result.Length,
+        max = first.timeMs,
+        maxLine = first.line,
+        url = url,
+        result = result.OrderByDescending(b => b.timeMs)
+      });
+    }
+    public async Task<IActionResult> TTT3(string id)
+    {
+      var c = new Requesta(options.Value);
+      var url = id;
       var result = await c.TryQuery(db, url);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
@@ -116,18 +134,18 @@ namespace ReheeCmfPackageTest.Controllers
         //var r = await Request(GetHttpClient(), HttpMethod.Get,
         //  "https://localhost:7183/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true");
         var end = DateTime.Now;
-        //Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is");
+        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is");
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds }); ;
         Thread.Sleep(100);
       }
       return result.ToArray();
     }
-    public async Task<checkResult[]> TryQuery(IContext db, string url)
+    public async Task<checkResult[]> TryQuery(IContext db, string url, bool isSumamry = false)
     {
       await Task.CompletedTask;
       var result = new List<checkResult>();
       //var dbset = db.Create<>
-      int moreThen500 = 0;
+      
       for (var i = 0; i < 100; i++)
       {
         var dic = new Dictionary<string, string>();
@@ -135,23 +153,33 @@ namespace ReheeCmfPackageTest.Controllers
         var start = DateTime.Now;
         var r = await Request(GetHttpClient(), HttpMethod.Get, url);
         var end = DateTime.Now;
-        Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
 
-        
+
+
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds });
         //Thread.Sleep(100);
+        if (!isSumamry)
+        {
+          Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+        }
+        else
+        {
+          int moreThen500 = 0;
+          var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
+          Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
+          var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
+          if (over500.Length > 0)
+          {
+            Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
+            moreThen500 = moreThen500 + over500.Length;
+          }
+          Console.WriteLine($"totel {moreThen500} lines more tham 500ms");
+
+        }
 
 
-        //var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
-        //Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
-        //var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
-        //if (over500.Length > 0)
-        //{
-        //  Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
-        //  moreThen500 = moreThen500 + over500.Length;
-        //}
       }
-      Console.WriteLine($"totel {moreThen500} lines more tham 500ms");
+      
       return result.ToArray();
     }
     protected override HttpClient GetHttpClient(string name = null)
