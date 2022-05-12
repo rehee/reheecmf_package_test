@@ -161,7 +161,7 @@ namespace ReheeCmfPackageTest.Controllers
         if (!isSumamry)
         {
 #if DEBUG
-          Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+          //Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
 #endif
 
         }
