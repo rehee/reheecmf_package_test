@@ -137,7 +137,7 @@ namespace ReheeCmfPackageTest
                   name: "default",
                   pattern: "{controller}/{action}/{id?}");
         endpoints.MapRazorPages();
-
+        endpoints.MapFallback("/index.html");
       });
     }
   }
