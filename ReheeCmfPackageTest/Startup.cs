@@ -135,7 +135,7 @@ namespace ReheeCmfPackageTest
         endpoints.ODataController(sp);
         endpoints.MapControllerRoute(
                   name: "default",
-                  pattern: "{controller=Home}/{action=Index}/{id?}");
+                  pattern: "{controller}/{action}/{id?}");
         endpoints.MapRazorPages();
 
       });
