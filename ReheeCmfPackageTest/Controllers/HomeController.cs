@@ -58,6 +58,11 @@ namespace ReheeCmfPackageTest.Controllers
       var c = new Requesta(options.Value);
       var url = $"{options.Value.EntityQueryUri}/api/data/read/healthcheck?$orderby=checkdate desc&$top=1&$count=true";
       //var url = "https://localhost:5001/Api/Data/Read/EntityInput?$top=1&$count=true";
+      //var url = "https://reheeaddon.herokuapp.com/home/ttt2";
+      //var url = "https://reheecmfwin.azurewebsites.net/home/ttt2";
+      //var url = "https://reheecmfwin.azurewebsites.net/api/data/read/healthcheck";
+
+
       var result = await c.TryQuery(db, url);
       var total = result.Sum(b => b.timeMs);
       var first = result.OrderByDescending(b => b.timeMs).FirstOrDefault();
@@ -122,24 +127,45 @@ namespace ReheeCmfPackageTest.Controllers
       await Task.CompletedTask;
       var result = new List<checkResult>();
       //var dbset = db.Create<>
+      int moreThen500 = 0;
       for (var i = 0; i < 100; i++)
       {
         var dic = new Dictionary<string, string>();
         var json = JsonConvert.SerializeObject(dic);
         var start = DateTime.Now;
-        //db.Create<EntityInput>(new EntityInput() { });
         var r = await Request(GetHttpClient(), HttpMethod.Get, url);
         var end = DateTime.Now;
         Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+
+        
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds });
-        Thread.Sleep(100);
+        //Thread.Sleep(100);
+
+
+        //var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
+        //Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
+        //var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
+        //if (over500.Length > 0)
+        //{
+        //  Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
+        //  moreThen500 = moreThen500 + over500.Length;
+        //}
       }
+      Console.WriteLine($"totel {moreThen500} lines more tham 500ms");
       return result.ToArray();
     }
     protected override HttpClient GetHttpClient(string name = null)
     {
       return new HttpClient();
     }
+  }
+  public class checkResultsummary
+  {
+    public double total { get; set; }
+    public double avg { get; set; }
+    public double max { get; set; }
+    public double maxLine { get; set; }
+    public checkResult[] result { get; set; }
   }
   public class checkResult
   {
