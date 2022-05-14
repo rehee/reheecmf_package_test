@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
 using ODataControllers;
 using ReheeCmf.API;
+using ReheeCmf.Base.Entities;
 using ReheeCmfPackageTest.Data;
 
 namespace ReheeCmfPackageTest
@@ -23,7 +24,11 @@ namespace ReheeCmfPackageTest
       {
         options.MultipartBodyLengthLimit = long.MaxValue;
       });
-      services.DefaultApiSetup<ApplicationDbContext, MyUser, RegisterDTO>(Configuration);
+      services.DefaultApiSetup<ApplicationDbContext, MyUser, RegisterDTO>(Configuration,
+        additionalOdataRouter: new (string, Action<Microsoft.OData.ModelBuilder.ODataConventionModelBuilder>)[]
+        {
+          ("Api/EF",builder=> builder.EntitySet<HealthCheck>(nameof(HealthCheck)).EntityType.HasKey(b => b.Id))
+        });
 
 
 

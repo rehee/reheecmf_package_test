@@ -142,7 +142,7 @@ namespace ReheeCmfPackageTest.Controllers
     }
     public async Task<checkResult[]> TryQuery(IContext db, string url, bool isSumamry = false)
     {
-      await Task.CompletedTask;
+      
       var result = new List<checkResult>();
       //var dbset = db.Create<>
       int moreThen500 = 0;
@@ -150,18 +150,24 @@ namespace ReheeCmfPackageTest.Controllers
       {
         var dic = new Dictionary<string, string>();
         var json = JsonConvert.SerializeObject(dic);
+        var client = GetHttpClient();
         var start = DateTime.Now;
-        var r = await Request(GetHttpClient(), HttpMethod.Get, url);
+        var r = await Request(client, HttpMethod.Get, url);
         var end = DateTime.Now;
 
-
+        Thread.Sleep(100);
 
         result.Add(new checkResult() { line = i, timeMs = (int)(end - start).TotalMilliseconds });
-        //Thread.Sleep(100);
+        
         if (!isSumamry)
         {
 #if DEBUG
-          //Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+          if((end - start).TotalMilliseconds > 500)
+          {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+          }
+          Console.WriteLine($"line {i} spend {(end - start).TotalMilliseconds} ms and request is {r.Success}");
+          Console.ForegroundColor = ConsoleColor.White;
 #endif
 
         }
@@ -170,17 +176,23 @@ namespace ReheeCmfPackageTest.Controllers
           try
           {
             var r2 = JsonConvert.DeserializeObject<checkResultsummary>(r.Content);
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"line {i} max {r2.max} in {r2.maxLine} avg {r2.avg}");
             var over500 = r2.result.Where(b => b.timeMs > 500).ToArray();
+            Console.ForegroundColor = ConsoleColor.White;
             if (over500.Length > 0)
             {
+              Console.ForegroundColor = ConsoleColor.Yellow;
               Console.WriteLine($"line {over500.Length} over 500 is{ JsonConvert.SerializeObject(over500)}");
               moreThen500 = moreThen500 + over500.Length;
+              Console.ForegroundColor = ConsoleColor.White;
             }
           }
           catch (Exception ex)
           {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"line {i} error {ex.Message}");
+            Console.ForegroundColor = ConsoleColor.White;
           }
 
 
