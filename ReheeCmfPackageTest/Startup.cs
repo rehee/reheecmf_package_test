@@ -6,7 +6,9 @@ using OData.Swagger.Services;
 using ODataControllers;
 using ReheeCmf.API;
 using ReheeCmf.Base.Entities;
+using ReheeCmf.DBContext;
 using ReheeCmfPackageTest.Data;
+using ReheeCmfPackageTest.Data.Instance;
 
 namespace ReheeCmfPackageTest
 {
@@ -23,6 +25,10 @@ namespace ReheeCmfPackageTest
       services.Configure<FormOptions>(options =>
       {
         options.MultipartBodyLengthLimit = long.MaxValue;
+      });
+      services.AddExtureOptionsAction(o =>
+      {
+        o.UseModel(ApplicationDbContextModel.Instance);
       });
       services.DefaultApiSetup<ApplicationDbContext, MyUser, RegisterDTO>(Configuration,
         additionalOdataRouter: new (string, Action<Microsoft.OData.ModelBuilder.ODataConventionModelBuilder>)[]
