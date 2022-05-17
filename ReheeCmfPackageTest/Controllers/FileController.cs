@@ -117,6 +117,24 @@ namespace ReheeCmfPackageTest.Controllers
 
       return Content("");
     }
+
+    [HttpGet]
+    public async Task<IActionResult> PostFile()
+    {
+      var file = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "sample.jpg");
+      using (var files = new MagickImage(file))
+      {
+        var wm = new MemoryStream();
+        files.Write(wm);
+        wm.Seek(0, SeekOrigin.Begin);
+        await fs.UploadFile(new FileServiceRequest
+        {
+          FileName = Guid.NewGuid() + ".jpg",
+          Content = wm
+        }, null);
+      }
+      return Content("");
+    }
   }
 
   public class FileCompressionOption
